@@ -75,14 +75,17 @@ namespace advanced_vod_functions_v3
             string transformName = "abrTransform";
             string jobName = "job-" + Guid.NewGuid();
 
+            // Asset & Url
+            string remoteUrl = Convert.ToString(data.remoteUrl);
+            string assetName = Convert.ToString(data.assetName);
 
             // Encode from any HTTPs source URL - a new feature of the v3 API.
             JobInputHttp jobInput =
-                new JobInputHttp(files: new List<string>{ Convert.ToString(data.remoteUrl) });
+                new JobInputHttp(files: new List<string>{ remoteUrl });
 
             JobOutput[] jobOutputs =
             {
-                new JobOutputAsset(Convert.ToString(data.assetName)),
+                new JobOutputAsset(assetName),
             };
 
             // In this function, we are ensuring that the job name is unique.
