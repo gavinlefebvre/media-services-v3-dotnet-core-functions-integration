@@ -70,7 +70,7 @@ namespace advanced_vod_functions_v3
             if (data.assetStorageAccount != null)
                 assetStorageAccount = data.assetStorageAccount;
             Guid assetGuid = Guid.NewGuid();
-            string assetName = data.assetNamePrefix + "-" + assetGuid.ToString();
+            string assetName = data.assetNamePrefix; // + "-" + assetGuid.ToString();
 
             MediaServicesConfigWrapper amsconfig = new MediaServicesConfigWrapper();
             Asset asset = null;
