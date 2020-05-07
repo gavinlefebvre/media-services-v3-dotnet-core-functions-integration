@@ -33,6 +33,7 @@ Output:
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -65,16 +66,19 @@ namespace advanced_vod_functions_v3
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
             // Set up ENV variables
-            accountName = System.Environment.GetEnvironmentVariable("AccountName");
-            resourceGroup = System.Environment.GetEnvironmentVariable("ResourceGroup");
+            string accountName = System.Environment.GetEnvironmentVariable("AccountName");
+            string resourceGroup = System.Environment.GetEnvironmentVariable("ResourceGroup");
+            MediaServicesConfigWrapper amsconfig = new MediaServicesConfigWrapper();
+            IAzureMediaServicesClient client = MediaServicesHelper.CreateMediaServicesClientAsync(amsconfig);
+
             // Transform & Job
-            transformName = "abrTransform";
-            jobName = "job-" + Guid();
+            string transformName = "abrTransform";
+            string jobName = "job-" + Guid.NewGuid();
 
 
-            // Encode from any HTTPs source URL - a new feature of the v3 API.  
+            // Encode from any HTTPs source URL - a new feature of the v3 API.
             JobInputHttp jobInput =
-                new JobInputHttp(files: new[] { data.remoteUrl });
+                new JobInputHttp(files: new List<string>{ data.remoteUrl });
 
             JobOutput[] jobOutputs =
             {
@@ -95,7 +99,7 @@ namespace advanced_vod_functions_v3
 
             return (ActionResult)new OkObjectResult(new
             {
-                job.name
+                job.Name
             });
         }
     }
