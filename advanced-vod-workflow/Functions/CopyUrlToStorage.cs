@@ -78,7 +78,7 @@ namespace advanced_vod_functions_v3
 
             // Encode from any HTTPs source URL - a new feature of the v3 API.
             JobInputHttp jobInput =
-                new JobInputHttp(files: new List<string>{ data.remoteUrl });
+                new JobInputHttp(files: new List<string>{ Convert.ToString(data.remoteUrl) });
 
             JobOutput[] jobOutputs =
             {
