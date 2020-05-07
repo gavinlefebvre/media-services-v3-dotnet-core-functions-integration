@@ -15,14 +15,8 @@ Input:
     }
 Output:
     {
-        // The name of the asset created
-        "assetName": "TestAsset",
-
-        // The identifier of the asset created
-        "assetId": "nb:cid:UUID:68adb036-43b7-45e6-81bd-8cf32013c810",
-
-        // The name of the destination container name for the asset created
-        "destinationContainer": "destinationContainer": "asset-4a5f429c-686c-4f6f-ae86-4078a4e6139e"
+        // The name of the asset updated
+        "assetName": "TestAsset"
     }
 
 ```
@@ -49,7 +43,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 using advanced_vod_functions_v3.SharedLibs;
-
+using advanced_vod_functions_v3.SharedLibs.amsv2;
 
 namespace advanced_vod_functions_v3
 {
@@ -69,8 +63,7 @@ namespace advanced_vod_functions_v3
             string accountName = System.Environment.GetEnvironmentVariable("AccountName");
             string resourceGroup = System.Environment.GetEnvironmentVariable("ResourceGroup");
             MediaServicesConfigWrapper amsconfig = new MediaServicesConfigWrapper();
-            IAzureMediaServicesClient client = MediaServicesHelper.CreateMediaServicesClientAsync(amsconfig);
-
+            
             // Transform & Job
             string transformName = "abrTransform";
             string jobName = "job-" + Guid.NewGuid();
@@ -79,30 +72,45 @@ namespace advanced_vod_functions_v3
             string remoteUrl = Convert.ToString(data.remoteUrl);
             string assetName = Convert.ToString(data.assetName);
 
-            // Encode from any HTTPs source URL - a new feature of the v3 API.
-            JobInputHttp jobInput =
-                new JobInputHttp(files: new List<string>{ remoteUrl });
-
-            JobOutput[] jobOutputs =
+            try
             {
-                new JobOutputAsset(assetName),
-            };
+                IAzureMediaServicesClient client = MediaServicesHelper.CreateMediaServicesClientAsync(amsconfig);
 
-            // In this function, we are ensuring that the job name is unique.
-            Job job = await client.Jobs.CreateAsync(
-                resourceGroup,
-                accountName,
-                transformName,
-                jobName,
-                new Job
+                // Encode from any HTTPs source URL - a new feature of the v3 API.
+                JobInputHttp jobInput =
+                    new JobInputHttp(files: new List<string>{ remoteUrl });
+
+                JobOutput[] jobOutputs =
                 {
-                    Input = jobInput,
-                    Outputs = jobOutputs,
-                });
+                    new JobOutputAsset(assetName),
+                };
+
+                // In this function, we are ensuring that the job name is unique.
+                Job job = await client.Jobs.CreateAsync(
+                    resourceGroup,
+                    accountName,
+                    transformName,
+                    jobName,
+                    new Job
+                    {
+                        Input = jobInput,
+                        Outputs = jobOutputs,
+                    });
+            }
+            catch (ApiErrorException e)
+            {
+                log.LogError($"ERROR: AMS API call failed with error code: {e.Body.Error.Code} and message: {e.Body.Error.Message}");
+                return new BadRequestObjectResult("AMS API call error: " + e.Message + "\nError Code: " + e.Body.Error.Code + "\nMessage: " + e.Body.Error.Message);
+            }
+            catch (Exception e)
+            {
+                log.LogError($"ERROR: Exception with message: {e.Message}");
+                return new BadRequestObjectResult("Error: " + e.Message + " caused by " + e.StackTrace);
+            }
 
             return (ActionResult)new OkObjectResult(new
             {
-                job.Name
+                assetName = assetName
             });
         }
     }

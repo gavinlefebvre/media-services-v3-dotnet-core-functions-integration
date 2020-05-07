@@ -1,5 +1,5 @@
 {
-    "azureFunctions.deploySubpath": "advanced-vod-workflow/bin/Release/netstandard2.0/publish",
+    "azureFunctions.deploySubpath": "advanced-vod-workflow/bin/Release/netcoreapp2.1/publish",
     "azureFunctions.projectLanguage": "C#",
     "azureFunctions.projectRuntime": "~2",
     "debug.internalConsoleOptions": "neverOpen",

@@ -71,7 +71,7 @@
 			"type": "func",
 			"dependsOn": "build",
 			"options": {
-				"cwd": "${workspaceFolder}/advanced-vod-workflow/bin/Debug/netstandard2.0"
+				"cwd": "${workspaceFolder}/advanced-vod-workflow/bin/Debug/netcoreapp2.1"
 			},
 			"command": "host start",
 			"isBackground": true,

@@ -1,0 +1,18 @@
+POST /api/CopyUrlToStorage HTTP/1.1
+host: localhost:7071
+content-type: application/json
+
+{
+    "uriString": "/api/CopyUrlToStorage",
+    "assetName": "bbb02",
+    "remoteUrl": "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_5MB.mp4"
+}
+
+POST /api/CreateEmptyAsset HTTP/1.1
+host: localhost:7071
+content-type: application/json
+
+{
+    "uriString": "/api/CreateEmptyAsset",
+    "assetNamePrefix": "bbb02"
+}
