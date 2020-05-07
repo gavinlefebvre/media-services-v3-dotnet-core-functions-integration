@@ -71,6 +71,7 @@ namespace advanced_vod_functions_v3
             transformName = "abrTransform";
             jobName = "job-" + Guid();
 
+
             // Encode from any HTTPs source URL - a new feature of the v3 API.  
             JobInputHttp jobInput =
                 new JobInputHttp(files: new[] { data.remoteUrl });
