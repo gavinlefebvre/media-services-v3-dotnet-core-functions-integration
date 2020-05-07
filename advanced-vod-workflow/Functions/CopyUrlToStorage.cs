@@ -82,7 +82,7 @@ namespace advanced_vod_functions_v3
 
             JobOutput[] jobOutputs =
             {
-                new JobOutputAsset(data.assetName),
+                new JobOutputAsset(Convert.ToString(data.assetName)),
             };
 
             // In this function, we are ensuring that the job name is unique.
